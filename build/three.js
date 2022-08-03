@@ -17860,7 +17860,7 @@
 			if (p === LuminanceAlphaFormat) return gl.LUMINANCE_ALPHA;
 			if (p === DepthFormat) return gl.DEPTH_COMPONENT;
 			if (p === DepthStencilFormat) return gl.DEPTH_STENCIL;
-			if (p === RedFormat) return gl.RED;
+			if (p === RedFormat) return gl.RED; // @deprecated since r137
 
 			if (p === RGBFormat) {
 				console.warn('THREE.WebGLRenderer: THREE.RGBFormat has been removed. Use THREE.RGBAFormat instead. https://github.com/mrdoob/three.js/pull/23228');
@@ -18645,11 +18645,8 @@
 
 				cameraVR.matrixWorld.decompose(cameraVR.position, cameraVR.quaternion, cameraVR.scale); // update user camera and its children
 
-				camera.position.copy(cameraVR.position);
-				camera.quaternion.copy(cameraVR.quaternion);
-				camera.scale.copy(cameraVR.scale);
 				camera.matrix.copy(cameraVR.matrix);
-				camera.matrixWorld.copy(cameraVR.matrixWorld);
+				camera.matrix.decompose(camera.position, camera.quaternion, camera.scale);
 				const children = camera.children;
 
 				for (let i = 0, l = children.length; i < l; i++) {
@@ -29813,6 +29810,7 @@
 			if (json.defines !== undefined) material.defines = json.defines;
 			if (json.vertexShader !== undefined) material.vertexShader = json.vertexShader;
 			if (json.fragmentShader !== undefined) material.fragmentShader = json.fragmentShader;
+			if (json.glslVersion !== undefined) material.glslVersion = json.glslVersion;
 
 			if (json.extensions !== undefined) {
 				for (const key in json.extensions) {
